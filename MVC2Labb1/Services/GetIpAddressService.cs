@@ -17,7 +17,7 @@ namespace MVC2Labb1.Services
 
         public string RemoteIP()
         {
-            return contextAccessor.HttpContext.Connection.LocalIpAddress.ToString();
+            return contextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
         }
     }
 }
