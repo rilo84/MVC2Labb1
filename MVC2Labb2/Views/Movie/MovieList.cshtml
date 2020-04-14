@@ -1,0 +1,29 @@
+﻿@model MVC2Labb2.ViewModels.MovieViewModel;
+
+    <table class="table table-dark">
+        <thead>
+            <tr>
+                <th scope="col">
+                    <a asp-controller="Movie" 
+                       asp-action="MovieList" 
+                       asp-route-sortColumn="title" 
+                       asp-route-sortOrder=@Model.SortOrder>Title</a></th>
+                <th scope="col">
+                    <a asp-controller="Movie"
+                       asp-action="MovieList"
+                       asp-route-sortColumn="date"
+                       asp-route-sortOrder=@Model.SortOrder>Release Year</a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var movie in Model.Movies)
+            {
+            <tr>
+                <td>@movie.Title</td>
+                <td>@movie.Release</td>
+            </tr>
+            }
+
+        </tbody>
+    </table>
