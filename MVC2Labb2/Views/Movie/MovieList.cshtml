@@ -4,15 +4,36 @@
         <thead>
             <tr>
                 <th scope="col">
-                    <a asp-controller="Movie" 
-                       asp-action="MovieList" 
-                       asp-route-sortColumn="title" 
-                       asp-route-sortOrder=@Model.SortOrder>Title</a></th>
+                    <a asp-controller="Movie"
+                       asp-action="MovieList"
+                       asp-route-sortColumn="title"
+                       asp-route-sortOrder=@Model.SortOrder>
+                        Title
+                        @if (Model.SortOrder == "asc")
+                        {
+                            <i class="fa fa-fw fa-sort-desc"></i>
+                        }
+                        else
+                        {
+                            <i class="fa fa-fw fa-sort-asc"></i>
+                        }
+                    </a>
+                </th>
                 <th scope="col">
                     <a asp-controller="Movie"
                        asp-action="MovieList"
                        asp-route-sortColumn="date"
-                       asp-route-sortOrder=@Model.SortOrder>Release Year</a>
+                       asp-route-sortOrder=@Model.SortOrder>
+                        Release Year
+                        @if (Model.SortOrder == "asc")
+                        {
+                            <i class="fa fa-fw fa-sort-desc"></i>
+                        }
+                        else
+                        {
+                            <i class="fa fa-fw fa-sort-asc"></i>
+                        }
+                    </a>
                 </th>
             </tr>
         </thead>

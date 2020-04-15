@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MVC2Labb2.Repositories;
 using MVC2Labb2.ViewModels;
 
@@ -18,46 +19,46 @@ namespace MVC2Labb2.Controllers
         }
 
         [HttpGet]
-        public IActionResult MovieList(string sortColumn, string sortOrder)
+        public async Task<IActionResult> MovieList(string sortColumn, string sortOrder)
         {
-            var model = new MovieViewModel();
-            var (col, order) = (sortColumn, sortOrder);
+            var model = new MovieViewModel ();
+
             var movies = movieRepository.GetAll()
                 .Select(m => new MovieViewModel.Movie { Title = m.Title, Release = m.ReleaseYear });
            
-            switch ((col,order))
+            switch (sortColumn, sortOrder)
             {
                 case ("title", "asc"):
                     {
-                        model.Movies = movies.OrderBy(m => m.Title).ToList();
-                        model.SortOrder = "desc";
-                        return View(model);
+                        movies = movies.OrderBy(m => m.Title);
+                        break;
                     }
 
                 case ("title", "desc"):
                     {
-                        model.Movies = movies.OrderByDescending(m => m.Title).ToList();
-                        model.SortOrder = "asc";
-                        return View(model);
+                        movies = movies.OrderByDescending(m => m.Title);
+                        break;
                     }
                 case ("date", "asc"):
                     {
-                        model.Movies = movies.OrderBy(m => m.Release).ToList();
-                        model.SortOrder = "desc";
-                        return View(model);
+                        movies = movies.OrderBy(m => m.Release);
+                        break;
                     }
 
                 case ("date", "desc"):
                     {
-                        model.Movies = movies.OrderByDescending(m => m.Release).ToList();
-                        model.SortOrder = "asc";
-                        return View(model);
+                        movies = movies.OrderByDescending(m => m.Release);
+                        break;
                     }
                 default:
-                    model.Movies = movies.OrderBy(m => m.Title).ToList();
-                    model.SortOrder = "desc";
-                    return View(model);
+                    movies = movies.OrderBy(m => m.Title);
+                    break;
             }
+
+            model.SortOrder = (sortOrder == "asc" || sortOrder == null) ? "desc" : "asc";
+            model.Movies = await movies.ToListAsync();
+
+            return View(model);
         }
     }
 }
