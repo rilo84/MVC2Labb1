@@ -19,5 +19,11 @@ namespace MVC2Labb2.Repositories
         {
             return context.Film;
         }
+
+        public int GetPageAmount(int amountMoviesResult)
+        {
+            decimal amountMovies = context.Film.Count();
+            return (int)Math.Ceiling(amountMovies / amountMoviesResult);
+        }
     }
 }

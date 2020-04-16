@@ -1,5 +1,61 @@
 ﻿@model MVC2Labb2.ViewModels.MovieViewModel;
 
+@{ 
+    string GetSortOrder(string column){
+        if (column == Model.SortColumn)
+        {
+            if (Model.SortOrder == "asc") return "desc";
+            else return "asc";
+        }
+        else return "asc";
+    }
+
+    int GetPrevPage(int page)
+    {
+        return page > 1 ? page - 1 : page;
+    }
+
+    int GetNextPage(int page)
+    {
+        return page < Model.Pages ? page + 1 : page;
+    }
+
+    int GetSteps()
+    {
+        if(Model.Pages > 20)
+        {
+            return (int)Math.Round((decimal)Model.Pages / 20);
+        }
+
+        return 1;
+    }
+}
+    <div class="dropdown m-2">
+        <label>Results per page:</label>
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            @Model.MoviesInPage
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" asp-controller="Movie"
+               asp-action="MovieList"
+               asp-route-sortColumn="title"
+               asp-route-sortOrder=@Model.SortOrder
+               asp-route-page="1"
+               asp-route-items="10">10</a>
+            <a class="dropdown-item" asp-controller="Movie"
+               asp-action="MovieList"
+               asp-route-sortColumn="title"
+               asp-route-sortOrder=@Model.SortOrder
+               asp-route-page="1"
+               asp-route-items="30">30</a>
+            <a class="dropdown-item" asp-controller="Movie"
+               asp-action="MovieList"
+               asp-route-sortColumn="title"
+               asp-route-sortOrder=@Model.SortOrder
+               asp-route-page="1"
+               asp-route-items="50">50</a>
+        </div>
+    </div>
     <table class="table table-dark">
         <thead>
             <tr>
@@ -7,15 +63,17 @@
                     <a asp-controller="Movie"
                        asp-action="MovieList"
                        asp-route-sortColumn="title"
-                       asp-route-sortOrder=@Model.SortOrder>
+                       asp-route-sortOrder=@GetSortOrder("title")
+                       asp-route-page=@Model.CurrentPage
+                       asp-route-items=@Model.MoviesInPage>
                         Title
-                        @if (Model.SortOrder == "asc")
-                        {
-                            <i class="fa fa-fw fa-sort-desc"></i>
-                        }
-                        else
+                        @if (Model.SortColumn == "title" && Model.SortOrder == "asc")
                         {
                             <i class="fa fa-fw fa-sort-asc"></i>
+                        }
+                        else if (Model.SortColumn == "title" && Model.SortOrder == "desc")
+                        {
+                            <i class="fa fa-fw fa-sort-desc"></i>
                         }
                     </a>
                 </th>
@@ -23,15 +81,35 @@
                     <a asp-controller="Movie"
                        asp-action="MovieList"
                        asp-route-sortColumn="date"
-                       asp-route-sortOrder=@Model.SortOrder>
+                       asp-route-sortOrder=@GetSortOrder("date")
+                       asp-route-page=@Model.CurrentPage
+                       asp-route-items=@Model.MoviesInPage>
                         Release Year
-                        @if (Model.SortOrder == "asc")
+                        @if (Model.SortColumn == "date" && Model.SortOrder == "asc")
+                        {
+                            <i class="fa fa-fw fa-sort-asc"></i>
+                        }
+                        else if (Model.SortColumn == "date" && Model.SortOrder == "desc")
                         {
                             <i class="fa fa-fw fa-sort-desc"></i>
                         }
-                        else
+                    </a>
+                </th>
+                <th scope="col">
+                    <a asp-controller="Movie"
+                       asp-action="MovieList"
+                       asp-route-sortColumn="rate"
+                       asp-route-sortOrder=@GetSortOrder("rate")
+                       asp-route-page=@Model.CurrentPage
+                       asp-route-items=@Model.MoviesInPage>
+                        Rental Rate
+                        @if (Model.SortColumn == "rate" && Model.SortOrder == "asc")
                         {
                             <i class="fa fa-fw fa-sort-asc"></i>
+                        }
+                        else if (Model.SortColumn == "rate" && Model.SortOrder == "desc")
+                        {
+                            <i class="fa fa-fw fa-sort-desc"></i>
                         }
                     </a>
                 </th>
@@ -43,8 +121,54 @@
             <tr>
                 <td>@movie.Title</td>
                 <td>@movie.Release</td>
+                <td>@movie.RentalRate</td>
             </tr>
             }
 
         </tbody>
     </table>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link" asp-controller="Movie"
+                   asp-action="MovieList"
+                   asp-route-sortColumn="title"
+                   asp-route-sortOrder=@Model.SortOrder
+                   asp-route-items=@Model.MoviesInPage
+                   asp-route-page=@GetPrevPage(Model.CurrentPage)>Previous</a>
+            </li>
+                @if (GetSteps() > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-controller="Movie"
+                           asp-action="MovieList"
+                           asp-route-sortColumn="title"
+                           asp-route-sortOrder=@Model.SortOrder
+                           asp-route-items=@Model.MoviesInPage
+                           asp-route-page="1">1</a>
+                    </li>
+                }
+
+                @for (int i = GetSteps(); i <= Model.Pages; i += GetSteps())
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-controller="Movie"
+                           asp-action="MovieList"
+                           asp-route-sortColumn=@Model.SortColumn
+                           asp-route-sortOrder=@Model.SortOrder
+                           asp-route-items=@Model.MoviesInPage
+                           asp-route-page=@(i)>@(i)</a>
+                    </li>
+                }
+
+                <li class="page-item">
+                    <a class="page-link" asp-controller="Movie"
+                       asp-action="MovieList"
+                       asp-route-sortColumn=@Model.SortColumn
+                       asp-route-sortOrder=@Model.SortOrder
+                       asp-route-items=@Model.MoviesInPage
+                       asp-route-page=@GetNextPage(Model.CurrentPage)>Next</a>
+                </li>
+            </ul>
+</nav>

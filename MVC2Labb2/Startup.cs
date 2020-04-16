@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MVC2Labb2.Models;
 using MVC2Labb2.Repositories;
+using MVC2Labb2.Services;
 
 namespace MVC2Labb2
 {
@@ -30,6 +31,7 @@ namespace MVC2Labb2
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<IMovieRepository, MovieRepository>();
+            services.AddTransient<ISortMovies, SortMovies>();
 
             services.AddControllersWithViews();
         }

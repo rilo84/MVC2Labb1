@@ -8,6 +8,7 @@ namespace MVC2Labb2.Repositories
 {
     public interface IMovieRepository
     {
+        int GetPageAmount(int amountMoviesResult);
         IQueryable<Film> GetAll();
     }
 }
