@@ -31,8 +31,8 @@ namespace MVC2Labb2
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<IMovieRepository, MovieRepository>();
-            services.AddTransient<ISortMovies, SortMovies>();
-
+            services.AddTransient<IMovieListBuilder, MovieListBuilder>();
+            services.AddMemoryCache();
             services.AddControllersWithViews();
         }
 

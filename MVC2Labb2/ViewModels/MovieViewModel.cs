@@ -14,12 +14,14 @@ namespace MVC2Labb2.ViewModels
         public int CurrentPage { get; set; }
         public List<Movie> Movies { get; set; } = new List<Movie>();
 
-        public MovieViewModel(string SortColumn, string SortOrder, int CurrentPage, int MoviesInPage)
+        public MovieViewModel(string SortColumn, string SortOrder, int CurrentPage, int MoviesInPage, int Pages, List<Movie> Movies)
         {
             this.SortColumn = SortColumn;
             this.SortOrder = SortOrder;
             this.CurrentPage = CurrentPage;
             this.MoviesInPage = MoviesInPage;
+            this.Pages = Pages;
+            this.Movies = Movies;
         }
         public class Movie
         {

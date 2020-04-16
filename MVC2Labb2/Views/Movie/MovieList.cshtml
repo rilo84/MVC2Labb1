@@ -54,6 +54,12 @@
                asp-route-sortOrder=@Model.SortOrder
                asp-route-page="1"
                asp-route-items="50">50</a>
+            <a class="dropdown-item" asp-controller="Movie"
+               asp-action="MovieList"
+               asp-route-sortColumn="title"
+               asp-route-sortOrder=@Model.SortOrder
+               asp-route-page="1"
+               asp-route-items="100">100</a>
         </div>
     </div>
     <table class="table table-dark">

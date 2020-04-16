@@ -12,26 +12,22 @@ namespace MVC2Labb2.Controllers
 {
     public class MovieController : Controller
     {
-        private readonly IMovieRepository movieRepository;
-        private readonly ISortMovies sortMovies;
+        private readonly IMovieListBuilder movieListBuilder;
 
-        public MovieController(IMovieRepository movieRepository, ISortMovies sortMovies)
+        public MovieController(IMovieListBuilder movieListBuilder )
         {
-            this.movieRepository = movieRepository;
-            this.sortMovies = sortMovies;
+            this.movieListBuilder = movieListBuilder;
         }
 
         [HttpGet]
-        public async Task<IActionResult> MovieList(string sortColumn = "title", string sortOrder = "asc", int page = 1, int items = 30)
+        public IActionResult MovieList(string sortColumn = "title", string sortOrder = "asc", int page = 1, int items = 30)
         {
-            var model = new MovieViewModel (sortColumn,sortOrder,page,items);
-            model.Pages = movieRepository.GetPageAmount(model.MoviesInPage);
-
-            var movies = movieRepository.GetAll()
-                .Select(m => new MovieViewModel.Movie { Title = m.Title, Release = m.ReleaseYear, RentalRate = m.RentalRate });
-
-            movies = sortMovies.Sort(movies, sortColumn, sortOrder);
-            model.Movies = await movies.Skip((page - 1) * model.MoviesInPage).Take(model.MoviesInPage).ToListAsync();
+            var model = movieListBuilder
+                .InitialSettings(sortColumn, sortOrder, page, items)
+                .ThenGetAllMovies()
+                .ThenSort()
+                .ThenFilterMoviesToPage()
+                .BuildMovieViewModel();
 
             return View(model);
         }
