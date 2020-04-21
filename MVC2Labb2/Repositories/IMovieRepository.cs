@@ -10,5 +10,6 @@ namespace MVC2Labb2.Repositories
     {
         int GetPageAmount(int amountMoviesResult);
         IQueryable<Film> GetAll();
+        Film GetMovie(int id);
     }
 }

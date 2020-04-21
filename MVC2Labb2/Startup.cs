@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MVC2Labb2.Middleware;
 using MVC2Labb2.Models;
 using MVC2Labb2.Repositories;
 using MVC2Labb2.Services;
@@ -30,9 +32,11 @@ namespace MVC2Labb2
             services.AddDbContext<sakilaContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddTransient<IMovieRepository, MovieRepository>();
-            services.AddTransient<IMovieListBuilder, MovieListBuilder>();
             services.AddMemoryCache();
+            services.AddTransient<IMovieRepository, MovieRepository>();
+            services.Decorate<IMovieRepository, CacheMovieRepository>();
+            services.AddTransient<IMovieListBuilder, MovieListBuilder>();
+            services.AddAutoMapper(typeof(MoviesProfile));
             services.AddControllersWithViews();
         }
 

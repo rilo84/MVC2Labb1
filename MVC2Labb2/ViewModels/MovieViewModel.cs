@@ -25,6 +25,7 @@ namespace MVC2Labb2.ViewModels
         }
         public class Movie
         {
+            public int Id { get; set; }
             public string Title { get; set; }
             public string Release { get; set; }
             public decimal RentalRate { get; set; }

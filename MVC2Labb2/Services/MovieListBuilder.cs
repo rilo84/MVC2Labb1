@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using MVC2Labb2.Repositories;
 using MVC2Labb2.ViewModels;
 using System;
@@ -24,7 +26,6 @@ namespace MVC2Labb2.Services
         private int Pages { get; set; }
         private int CurrentPage { get; set; }
         private IQueryable<Movie> Movies { get; set; }
-
         public MovieListBuilder InitialSettings(string sortColumn, string sortOrder, int currentPage, int moviesInPage)
         {
             SortColumn = sortColumn;
@@ -38,7 +39,7 @@ namespace MVC2Labb2.Services
         public MovieListBuilder ThenGetAllMovies()
         {
             Movies = movieRepository.GetAll()
-                .Select(m => new Movie { Title = m.Title, Release = m.ReleaseYear, RentalRate = m.RentalRate });
+                .Select(m => new Movie { Id=m.FilmId, Title = m.Title, Release = m.ReleaseYear, RentalRate = m.RentalRate });
             return this;
         }
 

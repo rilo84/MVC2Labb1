@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MVC2Labb2.Repositories
@@ -18,6 +19,11 @@ namespace MVC2Labb2.Repositories
         public IQueryable<Film> GetAll()
         {
             return context.Film;
+        }
+
+        public Film GetMovie(int id)
+        {
+            return context.Film.FirstOrDefault(m => m.FilmId == id);
         }
 
         public int GetPageAmount(int amountMoviesResult)
